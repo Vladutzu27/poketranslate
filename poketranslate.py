@@ -6,9 +6,13 @@ import sys
 import os
 import time
 import datetime
+import textwrap
+import pyperclip
 rec = 0
 spaces = []
 record = 0
+lang = "en"
+langTo = "ro"
 print("                                  ,'\ ")
 print("    _.----.        ____         ,'  _\   ___    ___     ____")
 print("_,-'       `.     |    |  /`.   \,-'    |   \  /   |   |    \  |`.")
@@ -29,7 +33,84 @@ print("               | |_| | | (_| | | | \__ \ | (_| | ||  __/")
 print("                \__|_|  \__,_|_| |_|___/_|\__,_|\__\___|")
 print("")
 print("                                 made by Vladuztu27 v0.1")
+print("")
+print("Do you wanna translate from English to Romanian? (y/n)")
+if input() == "n":
+    print("Do you want to see the avalible languages? (y/n)")
+    if input() == "y":
+        print("Available languages:")
+        print("Language Name	Language Code")
+        print("Afrikaans	af")
+        print("Irish	ga")
+        print("Albanian	sq")
+        print("Italian	it")
+        print("Arabic	ar")
+        print("Japanese	ja")
+        print("Azerbaijani	az")
+        print("Kannada	kn")
+        print("Basque	eu")
+        print("Korean	ko")
+        print("Bengali	bn")
+        print("Latin	la")
+        print("Belarusian	be")
+        print("Latvian	lv")
+        print("Bulgarian	bg")
+        print("Lithuanian	lt")
+        print("Catalan	ca")
+        print("Macedonian	mk")
+        print("Chinese Simplified	zh-CN")
+        print("Malay	ms")
+        print("Chinese Traditional	zh-TW")
+        print("Maltese	mt")
+        print("Croatian	hr")
+        print("Norwegian	no")
+        print("Czech	cs")
+        print("Persian	fa")
+        print("Danish	da")
+        print("Polish	pl")
+        print("Dutch	nl")
+        print("Portuguese	pt")
+        print("English	en")
+        print("Romanian	ro")
+        print("Esperanto	eo")
+        print("Russian	ru")
+        print("Estonian	et")
+        print("Serbian	sr")
+        print("Filipino	tl")
+        print("Slovak	sk")
+        print("Finnish	fi")
+        print("Slovenian	sl")
+        print("French	fr")
+        print("Spanish	es")
+        print("Galician	gl")
+        print("Swahili	sw")
+        print("Georgian	ka")
+        print("Swedish	sv")
+        print("German	de")
+        print("Tamil	ta")
+        print("Greek	el")
+        print("Telugu	te")
+        print("Gujarati	gu")
+        print("Thai	th")
+        print("Haitian Creole	ht")
+        print("Turkish	tr")
+        print("Hebrew	iw")
+        print("Ukrainian	uk")
+        print("Hindi	hi")
+        print("Urdu	ur")
+        print("Hungarian	hu")
+        print("Vietnamese	vi")
+        print("Icelandic	is")
+        print("Welsh	cy")
+        print("Indonesian	id")
+        print("Yiddish	yi")
+    print("Then enter the language you want to translate from: (e.g. 'en').")
+    lang = input()
+        
+    print("Enter the language you want to translate to:")
+    langTo = input()
 
+    
 def translate(text, lang_from, lang_to):
     url = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=%s&tl=%s&dt=t&q=%s' % (lang_from, lang_to, text)
     result = urllib.request.urlopen(url).read()
@@ -54,24 +135,32 @@ def putBackPokemonFormats(string):
     string = string.replace("Tom", "\v0101ぁ\x0000\x0000")
     string = string.replace("Paul", "\v0103ぁ\x0000\x0000")
     return string
-def scanForBreaks(string):
-    spaces.clear()
-    for i in range(0, len(string)):
-        if string[i] == " ":
-            spaces.append(i)
-    for i in range(0, len(spaces)):
-        record = 0
-        if spaces[i] <= 30 & spaces[i] > record:
-            record = spaces[i]
-    return record
-
-
+#use textwrap to wrap the text to a certain width
+def wrap(string, width):
+    #replace newlines with "\n"
+    croco = textwrap.fill(string, width).replace("\n", "\\n")
+    return croco
 
 
 text = input("enter text to translate: ")
-lang_from = input("enter language to translate from: ")
-lang_to = input("enter language to translate to: ")
 text = text.replace(" ", "%20")
 text = text.replace("\n", "")
 text = removePokemonFormats(text)
-print(putBackPokemonFormats(removeDia(translate(text, lang_from, lang_to))))
+print("is '", wrap(putBackPokemonFormats(removeDia(translate(text, lang, langTo))), 30), "' ok?")
+if input() == "y":
+    #copy the text to the clipboard
+    pyperclip.copy(wrap(putBackPokemonFormats(removeDia(translate(text, lang, langTo))), 30))
+    print("Text copied to clipboard.")
+else:
+    print("then enter YOUR translation:")
+    translation = input()
+    translation = translation.replace(" ", "%20")
+    translation = translation.replace("\n", "")
+    translation = putBackPokemonFormats(translation)
+    print("is '", wrap(putBackPokemonFormats(removeDia(translation)), 30), "' ok?")
+    if input() == "y":
+        #copy the text to the clipboard
+        pyperclip.copy(wrap(putBackPokemonFormats(removeDia(translation)), 30))
+        print("Text copied to clipboard.")
+    else:
+        print("damn youre BAD at translating.")
